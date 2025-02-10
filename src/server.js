@@ -4,11 +4,12 @@ import { postPlugin } from './routes/post.js';
 import { updatePlugin } from './routes/update.js';
 import { deletePlugin } from './routes/delete.js';
 
+const port = 6699;
 const app = Fastify();
-app.register(getPlugin);
-app.register(postPlugin);
-app.register(updatePlugin);
-app.register(deletePlugin);
+await app.register(getPlugin);
+await app.register(postPlugin);
+await app.register(updatePlugin);
+await app.register(deletePlugin);
 
 app.listen({ port }, (error) => {
   if(error) {

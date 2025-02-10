@@ -30,5 +30,8 @@ Artigos teem titulo, descrição/introdução, data de criação, sumario, banne
   - [ ] gerar o token
   - [ ] criar a validação no model
 
-
+- [ ] criar o banco de dados
+  - [ ] entender de noSQL primeiro
+  - [ ] entender sobre o mongoDb
+  ...
 
