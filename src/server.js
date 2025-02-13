@@ -4,11 +4,15 @@ import { postPlugin } from './routes/post.js';
 import { updatePlugin } from './routes/update.js';
 import { deletePlugin } from './routes/delete.js';
 
+
+const port = 6699;
 const app = Fastify();
-app.register(getPlugin);
-app.register(postPlugin);
-app.register(updatePlugin);
-app.register(deletePlugin);
+const serverErrorMessage = { ok: false, message: 'Erro interno do servidor... Estamos resolvendo o problema.' };
+app.decorate('serverError', serverErrorMessage)
+await app.register(getPlugin, { prefix: '/articles' });
+await app.register(postPlugin, { prefix: '/articles' });
+await app.register(updatePlugin, { prefix: '/articles' });
+await app.register(deletePlugin, { prefix: '/articles' });
 
 app.listen({ port }, (error) => {
   if(error) {
