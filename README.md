@@ -20,18 +20,17 @@ Artigos teem titulo, descrição/introdução, data de criação, sumario, banne
 #### **To Do List**
 
 - [ ] criar as rotas
-  - [ ] GET /articles
-  - [ ] POST /articles/add
+  - [x] GET /articles
+  - [x] POST /articles/add
   - [ ] PUT /articles/update
   - [ ] PATCH /articles/one-change
-  - [ ] DELETE /articles/delete
+  - [x] DELETE /articles/delete
 
 - [ ] criar o sistema de autenticação
   - [ ] gerar o token
   - [ ] criar a validação no model
 
 - [ ] criar o banco de dados
-  - [ ] entender de noSQL primeiro
-  - [ ] entender sobre o mongoDb
+  - [ ] criar a tabela
   ...
 

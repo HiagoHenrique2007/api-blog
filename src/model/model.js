@@ -4,16 +4,16 @@ class Model {
 
   #host = HOST_DB;
   #user = USER_DB;
-  #password PASSWORD_DB;
+  #password = PASSWORD_DB;
   #port = PORT_DB;
   #database = DATABASE_DB;
 
   #db = {
-    host,
-    user,
-    password,
-    port,
-    database
+    host: this.#host,
+    user: this.#user,
+    password: this.#password,
+    database: this.#database,
+    port: this.#port,
   }
 
   #connection;
@@ -22,7 +22,7 @@ class Model {
 
   // querys will be used;
   #querySelect = `SELECT * FROM ${this.#table}`;
-  #queryInsert = `INSERT INTO ${this.#table} VALUES(?, ?, ?, ?, ?, ?)`;
+  #queryInsert = `INSERT INTO ${this.#table} VALUES(?, ?, ?, ?)`;
   #queryDelete = `DELETE FROM ${this.#table} WHERE id=?`;
   #queryTable = `CREATE TABLE IF NOT EXISTS ${this.#table}(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -33,13 +33,12 @@ class Model {
     content VARCHAR(255)
   );`;
 
+  async createConnection() {
+    this.#connection = await mysql.createConnection(this.#db).promise();
+  }
 
   constructor() {
     this.createConnection();
-  }
-
-  async createConnection() {
-    this.#connection = await mysql.createConnection(this.#db).promise();
   }
 
   async createTable() {
@@ -50,18 +49,16 @@ class Model {
       return { ok: true };
 
     } catch(dbError) {
-      console.log(`erro na table: ${dbError}`);
       return { ok: false, error: dbError };
     }
 
   }
 
-  async getArticles(code) {
+  async getArticles() {
 
-    code = code.toUpperCase();
     try {
 
-      const [rows] = await this.#connection.query(this.#querySelect, [code]);
+      const [rows] = await this.#connection.query(this.#querySelect);
       return { ok: true, rows };
 
     } catch(dbError) {
@@ -70,11 +67,11 @@ class Model {
   
   }
 
-  async addArticle() {
+  async addArticle(banner_path, title, date, description, contentArticle) {
 
     try {
 
-      await this.#connection.query(this.#queryInsert, []);
+      await this.#connection.query(this.#queryInsert, [banner_path, title, date, description, contentArticle]);
       return { ok: true };
 
     } catch(dbError) {
@@ -83,30 +80,41 @@ class Model {
 
   }
 
-  async updateArticle() {
+  // async updateArticle(id) {
 
-    try {
+  //   try {
       
-      await this.#connection.query(this.#queryUpdate, []);
-      return { ok: true };
+  //     await this.#connection.query(this.#queryUpdate, [id]);
+  //     return { ok: true };
     
+  //   } catch(dbError) {
+  //     return { ok: false, error: dbError };
+  //   }
+
+  // }
+
+  async deleteArticle(id) {
+
+    try {
+    
+      await this.#connection.query(this.#queryDelete, [id]);
+      return { ok: true };
+
     } catch(dbError) {
       return { ok: false, error: dbError };
     }
 
   }
 
-  async deleteArticle() {
+  async isOk(app) {
+    app.addHook('onRequest', async (request, reply) => {
 
-    try {
-    
-      await this.#connection.query(this.#queryDelete, []);
-      return { ok: true };
-
-    } catch(dbErro) {
-      return { ok: false, error: dbError };
-    }
-
+      const tokenAdmin = request.headers.authorization; // Authorization é um metadado do header usado para passar tokens de acesso.
+      if(!tokenAdmin || tokenAdmin !== process.env.TOKEN_ADMIN) {
+        return reply.code(401).send({ ok: false, message: 'Token invalido ou ausente!' });
+      }
+      return true;
+    })
   }
 
 }

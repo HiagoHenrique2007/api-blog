@@ -1,9 +1,11 @@
+import { model } from "../model/model";
+
 export async function getPlugin(app) {
+  app.get('/', async (request, reply) => {
 
-  app.get('/', (request, reply) => {
-
-    // retornar a lista de artigos...
-    return reply.code(200).send({ ok: true });
+    const resultModel = await model.getArticles();
+    if(!resultModel.ok) return reply.code(500).send(app.serverError);
+    return reply.code(200).send({ ok: true, articles: resultModel.rows });
 
   });
 
