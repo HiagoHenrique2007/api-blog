@@ -109,11 +109,17 @@ class Model {
   async isOk(app) {
     app.addHook('onRequest', async (request, reply) => {
 
+      // verifica se existe o token na requisição
       const tokenAdmin = request.headers.authorization; // Authorization é um metadado do header usado para passar tokens de acesso.
-      if(!tokenAdmin || tokenAdmin !== process.env.TOKEN_ADMIN) {
-        return reply.code(401).send({ ok: false, message: 'Token invalido ou ausente!' });
+      if(!tokenAdmin) {
+        return reply.code(401).send({ ok: false, message: 'Token Ausente!' });
       }
-      return true;
+
+      // verifica se o token é o token valido
+      const tokenIsCorrect = tokenAdmin === process.env.TOKEN_ADMIN ? true : false
+      if(!tokenIsCorrect) {
+        return reply.code(401).send({ ok: false, message: 'Token Invalido!' });
+      }
     })
   }
 
