@@ -26,9 +26,7 @@ Artigos teem titulo, descrição/introdução, data de criação, sumario, banne
   - [ ] PATCH /articles/one-change
   - [x] DELETE /articles/delete
 
-- [ ] criar o sistema de autenticação
-  - [x] criar a validação no model
-  - [ ] gerar o token com o hash em uma variavel de ambiente
+- [x] criar o sistema de autenticação
 
 - [ ] criar o banco de dados
   - [ ] criar a tabela
